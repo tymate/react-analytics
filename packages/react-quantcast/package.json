@@ -1,6 +1,6 @@
 {
   "name": "@tymate/react-quantcast",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Quantcast Choice integration for React",
   "main": "dist/index.js",
   "repository": "github.com/tymate/react-analytics",
@@ -43,5 +43,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "gitHead": "4f53ba8231c35c2726edbba88a6070ead6d27054"
 }
