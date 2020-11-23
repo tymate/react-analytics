@@ -19,11 +19,17 @@ export const TCFProvider = ({
   children,
 }) => {
   const [purposes, setPurposes] = useState([]);
+  const [publisherPurposes, setPublisherPurposes] = useState([]);
   const [customVendors, setCustomVendors] = useState([]);
 
   const handleCMPEvent = async tcData => {
     const customConsents = await getNonIABVendorConsents();
-    const enabledPurposes = Object.keys(tcData.publisher.consents)
+
+    const enabledPurposes = Object.keys(tcData.purpose.consents)
+      .filter(id => tcData.purpose.consents[id])
+      .map(id => PURPOSES[id]);
+
+    const publisherPurposes = Object.keys(tcData.publisher.consents)
       .filter(id => tcData.publisher.consents[id])
       .map(id => PURPOSES[id]);
 
@@ -32,6 +38,7 @@ export const TCFProvider = ({
       .map(id => customVendorsMapping[id]);
 
     setPurposes(enabledPurposes);
+    setPublisherPurposes(publisherPurposes);
     setCustomVendors(customVendors);
   };
 
@@ -58,8 +65,8 @@ export const TCFProvider = ({
   });
 
   return (
-    <TCFContext.Provider value={{ purposes, customVendors }}>
-      {children({ purposes, customVendors })}
+    <TCFContext.Provider value={{ purposes, publisherPurposes, customVendors }}>
+      {children({ purposes, publisherPurposes, customVendors })}
     </TCFContext.Provider>
   );
 };
