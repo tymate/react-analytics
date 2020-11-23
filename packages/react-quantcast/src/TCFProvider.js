@@ -21,7 +21,7 @@ export const TCFProvider = ({
   const [purposes, setPurposes] = useState([]);
   const [customVendors, setCustomVendors] = useState([]);
 
-  const handleUserActionComplete = async tcData => {
+  const handleCMPEvent = async tcData => {
     const customConsents = await getNonIABVendorConsents();
     const enabledPurposes = Object.keys(tcData.publisher.consents)
       .filter(id => tcData.publisher.consents[id])
@@ -40,8 +40,9 @@ export const TCFProvider = ({
       return;
     }
     switch (tcData.eventStatus) {
+      case 'tcloaded':
       case 'useractioncomplete':
-        handleUserActionComplete(tcData);
+        handleCMPEvent(tcData);
         break;
       default:
         break;
