@@ -25,8 +25,15 @@ The provider must wrap a children function having this signature
 ```
 
 Its parameter keys are :
-
-- `purposes`, an array of allowed purposes selected by the user.
+- `purposes`, an object mapping purposes asked by the website and the boolean value of user consent. This object can be passed to Google Tag Manager to define which purposes have been consented to.
+  ```es6
+  {
+    "purpose.content_performance": false,
+    "purpose.improve_products": true
+  }
+  ```
+- `consentPurposes`, an array of purposes consented by the user.
+- `publisherPuproses`, an array of purposes enabled in the Quantcast interface.
 - `customVendors`, an array of custom vendors enabled by the user.
 
 ```es6
@@ -38,9 +45,9 @@ import { includes } from 'lodash';
     1: 'vendor.facebook',
     2: 'vendor.google_analytics',
   }}>
-  {({ purposes, customVendors }) => (
+  {({ consentPurposes, customVendors }) => (
     <>
-      {includes(purposes, CONTENT_PERFORMANCE) && (
+      {includes(consentPurposes, CONTENT_PERFORMANCE) && (
         <div>Content performance enabled, activating Google Analytics</div>
       )}
       {includes(customVendors, 'vendor.facebook') && (
@@ -59,11 +66,11 @@ import React, { useContext } from 'react';
 import { TCFContext, CONTENT_PERFORMANCE } from '@tymate/react-quantcast';
 
 const Analytics = () => {
-  const { purposes } = useContext(TCFContext);
+  const { consentPurposes } = useContext(TCFContext);
 
   return (
     <>
-      {includes(purposes, CONTENT_PERFORMANCE) && (
+      {includes(consentPurposes, CONTENT_PERFORMANCE) && (
         <div>Content performance enabled</div>
       )}
     </>

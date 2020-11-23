@@ -18,14 +18,23 @@ export const TCFProvider = ({
   customVendorsMapping = {},
   children,
 }) => {
-  const [purposes, setPurposes] = useState([]);
+  const [isReady, setIsReady] = useState(false);
+  const [consentPurposes, setConsentPurposes] = useState([]);
   const [publisherPurposes, setPublisherPurposes] = useState([]);
   const [customVendors, setCustomVendors] = useState([]);
+
+  const purposes = publisherPurposes.reduce(
+    (obj, purpose) => ({
+      ...obj,
+      [purpose]: consentPurposes.indexOf(purpose) !== -1,
+    }),
+    {},
+  );
 
   const handleCMPEvent = async tcData => {
     const customConsents = await getNonIABVendorConsents();
 
-    const enabledPurposes = Object.keys(tcData.purpose.consents)
+    const consentPurposes = Object.keys(tcData.purpose.consents)
       .filter(id => tcData.purpose.consents[id])
       .map(id => PURPOSES[id]);
 
@@ -37,9 +46,10 @@ export const TCFProvider = ({
       .filter(id => customConsents.nonIabVendorConsents[id])
       .map(id => customVendorsMapping[id]);
 
-    setPurposes(enabledPurposes);
+    setConsentPurposes(consentPurposes);
     setPublisherPurposes(publisherPurposes);
     setCustomVendors(customVendors);
+    setIsReady(true);
   };
 
   const handleTCFReady = (tcData, success) => {
@@ -64,9 +74,17 @@ export const TCFProvider = ({
     return () => window.__tcfapi('removeEventListener', 2, handleTCFReady);
   });
 
+  const contextValue = {
+    isReady,
+    purposes,
+    consentPurposes,
+    publisherPurposes,
+    customVendors,
+  };
+
   return (
-    <TCFContext.Provider value={{ purposes, publisherPurposes, customVendors }}>
-      {children({ purposes, publisherPurposes, customVendors })}
+    <TCFContext.Provider value={contextValue}>
+      {children(contextValue)}
     </TCFContext.Provider>
   );
 };
