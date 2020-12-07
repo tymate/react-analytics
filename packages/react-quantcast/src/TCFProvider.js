@@ -74,12 +74,17 @@ export const TCFProvider = ({
     return () => window.__tcfapi('removeEventListener', 2, handleTCFReady);
   });
 
+  const handleReprompt = () => {
+    window.__tcfapi('displayConsentUi', 2, function () {});
+  };
+
   const contextValue = {
     isReady,
     purposes,
     consentPurposes,
     publisherPurposes,
     customVendors,
+    onReprompt: handleReprompt,
   };
 
   return (
