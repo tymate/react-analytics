@@ -1,6 +1,6 @@
 {
   "name": "@tymate/gatsby-plugin-quantcast",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Quantcast Choice plugin for Gatsby",
   "main": "index.js",
   "repository": "github.com/tymate/react-analytics",
