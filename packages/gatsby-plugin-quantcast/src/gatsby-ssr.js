@@ -2,7 +2,7 @@ import React from 'react';
 
 const makeScript = ({ accountId, host }) => `
 (function() {
-var host = '${host}' || window.location.host;
+var host = ${host ? `'${host}'` : undefined} || window.location.host;
 var element = document.createElement('script');
 var firstScript = document.getElementsByTagName('script')[0];
 var milliseconds = new Date().getTime();
